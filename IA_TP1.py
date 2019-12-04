@@ -1,12 +1,12 @@
 import matplotlib.pyplot as plt
 #import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models  import Sequential
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.layers import Conv2D, MaxPooling2D
 from keras import losses
 from keras import optimizers
 from keras import models
+
+from model import *
+
 train_datagen = ImageDataGenerator(
         rescale=1./255,
         shear_range=0.2,
@@ -37,17 +37,7 @@ def plotImages(images_arr):
     plt.show()
     
 #plotImages(sample_training_images[:5])
- 
-model = Sequential()
-model.add(Conv2D(32, kernel_size=(5, 5), strides=(1, 1),
-                 activation='relu',
-                 input_shape=(150,150,3)))
-model.add(MaxPooling2D(pool_size=(3, 3), strides=(3, 3)))
-model.add(Conv2D(64, (5, 5), activation='relu'))
-model.add(MaxPooling2D(pool_size=(3, 3)))
-model.add(Flatten())
-model.add(Dense(1000, activation='relu'))
-model.add(Dense(1, activation='sigmoid'))
+
 model.compile(
               loss='binary_crossentropy',
               optimizer= 'sgd' ,
@@ -56,14 +46,16 @@ model.compile(
 
 model.fit_generator(
         train_generator,
-        steps_per_epoch=228,
+        steps_per_epoch=42,
         epochs=7,
         validation_data=validation_generator,
         validation_steps=200)
 
 sample_training_images, class_ = next(train_generator)
 
-model.summary() 
+model.save('train.h5')
+
+
 
 
 
